@@ -16,107 +16,41 @@
       {
         "step": "detect_control_chars",
         "action": "Scan input for unescaped control characters",
-        "fallback": "If no control chars, pass through"
+        "implementation": "re.search(r'(?<!\\\\)[\\\\x00-\\\\x1f]', input)"
       },
       {
         "step": "escape_chars",
-        "action": "Replace control chars with escaped versions using regex pattern",
-        "implementation": "re.sub(r'(?<!\\\\)([\\\\n\\\\r\\\\t\\\\f\\\\b])', escape_map[char], input)"
+        "action": "Replace control chars with escaped versions",
+        "implementation": "re.sub(pattern, escape_map[char], input)"
       },
       {
         "step": "validate_json",
         "action": "Attempt json.loads() on sanitized string",
-        "error_handling": "If still fails, report original error with context"
+        "implementation": "json.loads(sanitized_string)"
       },
       {
         "step": "return_result",
         "action": "Return parsed JSON object",
-        "optimization": "Cache sanitized string if identical input seen before"
+        "optimization": "Cache sanitized string for repeated inputs"
       }
     ],
     "context_awareness": {
       "language": "python",
       "frameworks": ["langchain", "openclaw", "crewai"],
       "dependencies": ["json", "re"]
-    },
-    "error_recovery": [
-      {
-        "condition": "Sanitization succeeds but parse fails",
-        "action": "Try alternative JSON parsers (orjson, ujson)"
-      },
-      {
-        "condition": "Multiple control char patterns",
-        "action": "Apply multiple sanitization passes"
-      }
-    ],
-    "optimizations": {
-      "token_efficiency": {
-        "technique": "Early termination if no control chars detected",
-        "saving": "Saves 12% tokens on average"
-      },
-      "caching": {
-        "enabled": true,
-        "strategy": "LRU with 1000 entry limit"
-      }
     }
   },
   "metadata": {
     "success_rate": 0.942,
     "uses": 12847,
     "token_efficiency": 0.12,
-    "contributors": ["evolution-engine", "jason-l"],
-    "tags": ["json", "parsing", "error-handling", "control-characters", "llm-output"],
+    "contributors": ["evolution-engine"],
+    "tags": ["json", "parsing", "error-handling", "control-characters"],
     "source_issues": [
       "MoonshotAI/kimi-cli#1378",
-      "langchain-ai/langchain#8471",
-      "openai/openai-python#1234"
+      "langchain-ai/langchain#8471"
     ],
-    "evolution_history": [
-      {
-        "version": "1.0.0",
-        "timestamp": "2025-11-15T00:00:00Z",
-        "changes": ["Initial skill from failure clustering"]
-      },
-      {
-        "version": "2.0.0",
-        "timestamp": "2025-12-01T00:00:00Z",
-        "changes": ["Added multi-framework support"]
-      },
-      {
-        "version": "3.0.0",
-        "timestamp": "2026-01-15T00:00:00Z",
-        "changes": ["Rewritten for token efficiency"]
-      },
-      {
-        "version": "3.1.0",
-        "timestamp": "2026-02-01T00:00:00Z",
-        "changes": ["Added streaming support"]
-      },
-      {
-        "version": "3.2.0",
-        "timestamp": "2026-02-15T00:00:00Z",
-        "changes": ["Optimized token usage by 12%"]
-      },
-      {
-        "version": "3.2.1",
-        "timestamp": "2026-03-01T00:00:00Z",
-        "changes": ["Added Unicode control character support"]
-      }
-    ]
-  },
-  "capsule": {
-    "documentation": "see SKILL.md",
-    "examples": [
-      {
-        "input": "{\"cmd\": \"git commit -m \\\"feat: add\\n\\nMulti-line\\\"\"}",
-        "output": "{\"cmd\": \"git commit -m \\\"feat: add\\\\n\\\\nMulti-line\\\"\"}",
-        "success": true
-      }
-    ],
-    "validation_results": {
-      "synthetic_tests": 847,
-      "pass_rate": 0.942,
-      "edge_cases_handled": ["nested_json", "multiple_control_chars", "unicode"]
-    }
+    "created_at": "2026-03-12T00:00:00Z",
+    "updated_at": "2026-03-12T00:00:00Z"
   }
 }
