@@ -6,6 +6,8 @@
 
 When your AI agent fails, SkillForge suggests a fix based on common patterns.
 
+**Note: This is a simple pattern matcher, not AI.**
+
 ## Install
 
 ```bash
@@ -19,62 +21,36 @@ import { SkillForge } from '@skillforge/core'
 
 const forge = new SkillForge({ agent: 'my-agent' })
 
-// Capture a failure
 try {
   await agent.run()
 } catch (error) {
   forge.capture(error, 'my-task')
-  
-  // Get suggested fix
   const skill = forge.suggest()
   if (skill) {
-    console.log(`Try: ${skill.name}`)
     console.log(skill.fix(error))
   }
 }
 ```
 
-## Built-in skills
+## Built-in patterns
 
-Real fixes extracted from actual projects:
+Generic error patterns that commonly occur:
 
-| Skill | Pattern | Source |
-|-------|---------|--------|
-| json-sanitizer | JSONDecodeError + control chars | MoonshotAI/kimi-cli |
-| memory-config | Memory exceeds | jundot/omlx |
-| tool-call-fixer | Tool not called | QwenLM/Qwen-Agent |
+| Pattern | Description |
+|---------|-------------|
+| json-sanitizer | JSON with control characters |
+| memory-config | GPU memory issues |
+| tool-call-fixer | Missing tool calls |
 
 ## How it works
 
-1. You capture a failure
-2. SkillForge matches the error against known patterns
-3. Returns a code snippet to fix it
+1. Capture error message
+2. Match against regex patterns
+3. Return fix suggestion
 
-## API
+## Status
 
-### `new SkillForge(config)`
-
-```typescript
-const forge = new SkillForge({ agent: 'my-agent' })
-```
-
-### `forge.capture(error, task)`
-
-Record a failure for analysis.
-
-### `forge.suggest()`
-
-Get the best matching skill for the latest failure.
-
-Returns `Skill` or `null`.
-
-### `forge.wrap(agent)`
-
-Auto-wrap an agent to capture failures.
-
-```typescript
-forge.wrap(myAgent)
-```
+**Early MVP** - Pattern matching only, no AI involved.
 
 ## License
 

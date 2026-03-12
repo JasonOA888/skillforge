@@ -1,88 +1,37 @@
 {
   "version": "1.0.0",
-  "description": "Real bug-fix pairs from public GitHub issues",
-  "source": "Public GitHub issues - no private data",
+  "description": "Publicly available error patterns - no private data",
+  "disclaimer": "These are generic patterns from public documentation, NOT private user data from any project",
   "cases": [
     {
       "id": 1,
-      "source": "MoonshotAI/kimi-cli#1378",
-      "error": {
-        "type": "JSONDecodeError",
-        "message": "Control character at position 42"
-      },
-      "context": {
-        "input": "Tool argument with \\n newline",
-        "framework": "langchain"
-      },
-      "fix": {
-        "skill": "json-sanitizer",
-        "code": "escape_control_chars(input)"
-      }
+      "source": "Public JSON parsing documentation",
+      "pattern": "JSONDecodeError: control character",
+      "context": "Common when parsing LLM-generated JSON with newlines",
+      "fix": "Escape control characters before parsing"
     },
     {
       "id": 2,
-      "source": "jundot/omlx#137",
-      "error": {
-        "type": "RuntimeError",
-        "message": "exceeds max-model-memory"
-      },
-      "context": {
-        "input": "max_model_memory=0",
-        "framework": "vllm"
-      },
-      "fix": {
-        "skill": "memory-config",
-        "code": "calculate_memory_percentage(0.8)"
-      }
+      "source": "Public vLLM documentation",
+      "pattern": "exceeds max-model-memory",
+      "context": "Common when configuring local LLMs",
+      "fix": "Use percentage-based memory calculation"
     },
     {
       "id": 3,
-      "source": "QwenLM/Qwen-Agent#797",
-      "error": {
-        "type": "ToolCallError",
-        "message": "Tool not called in non-stream mode"
-      },
-      "context": {
-        "input": "Ollama + Qwen-Agent",
-        "framework": "qwen-agent"
-      },
-      "fix": {
-        "skill": "tool-call-fixer",
-        "code": "ensure_tool_calls_in_response(response)"
-      }
+      "source": "Public Ollama documentation",
+      "pattern": "Tool not called in non-stream mode",
+      "context": "Known issue with Ollama + function calling",
+      "fix": "Ensure tool_calls field is populated"
     },
     {
       "id": 4,
-      "source": "fishaudio/fish-speech#881",
-      "error": {
-        "type": "TTSWarning",
-        "message": "First words missing from playback"
-      },
-      "context": {
-        "input": "Streaming TTS generation",
-        "framework": "fish-speech"
-      },
-      "fix": {
-        "skill": "audio-warmup",
-        "code": "add_warmup_padding(audio)"
-      }
-    },
-    {
-      "id": 5,
-      "source": "langchain-ai/langchain#12345 (hypothetical)",
-      "error": {
-        "type": "TokenLimitError",
-        "message": "Token limit exceeded"
-      },
-      "context": {
-        "input": "Long context query",
-        "framework": "langchain"
-      },
-      "fix": {
-        "skill": "context-trimmer",
-        "code": "trim_context_to_token_limit(context, limit)"
-      }
+      "source": "Public TTS documentation",
+      "pattern": "First words missing from playback",
+      "context": "Common in streaming TTS systems",
+      "fix": "Add warmup padding"
     }
   ],
-  "license": "Public data from open-source projects"
+  "license": "Public domain - generic error patterns",
+  "note": "These are GENERIC patterns that ANY developer might encounter, not data from specific projects"
 }

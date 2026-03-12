@@ -17,7 +17,7 @@ export interface Skill {
   fix: (error: Error) => string;
 }
 
-// Real skill: JSON control characters
+// Pattern: JSON control characters (generic)
 const jsonSanitizer: Skill = {
   name: 'json-sanitizer',
   pattern: /JSONDecodeError.*control character/i,
@@ -33,7 +33,7 @@ def safe_json_parse(s: str) -> dict:
   }
 };
 
-// Real skill: GPU memory
+// Pattern: GPU memory (generic)
 const memoryConfig: Skill = {
   name: 'memory-config', 
   pattern: /memory.*exceed|out.?of.?memory/i,
@@ -49,7 +49,7 @@ def get_memory_config(ratio: float = 0.8) -> str:
   }
 };
 
-// Real skill: Tool calling
+// Pattern: Tool calling (generic)
 const toolCallFixer: Skill = {
   name: 'tool-call-fixer',
   pattern: /tool.*(not.?called|missing)/i,
