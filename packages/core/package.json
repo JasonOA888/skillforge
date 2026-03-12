@@ -1,15 +1,16 @@
 {
   "name": "@skillforge/sdk",
   "version": "0.1.0",
-  "description": "Skill evolution for AI agents",
+  "description": "Learn from AI agent failures",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": ["dist"],
   "scripts": {
     "build": "tsc",
+    "test": "node dist/test.js",
     "prepublishOnly": "npm run build"
   },
-  "keywords": ["ai", "agent", "skills", "evolution"],
+  "keywords": ["ai", "agent", "errors", "debugging"],
   "author": "Jason L",
   "license": "MIT",
   "devDependencies": {
