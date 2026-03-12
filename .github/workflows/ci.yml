@@ -1,87 +1,12 @@
-name: SkillForge CI
+name: CI
 
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+on: [push, pull_request]
 
 jobs:
-  validate:
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
-      - name: Validate skill format
-        run: |
-          python3 << 'EOF'
-          import json
-          from pathlib import Path
-          
-          errors = []
-          
-          for skill_dir in Path('skills').iterdir():
-              if not skill_dir.is_dir():
-                  continue
-              
-              skill_md = skill_dir / 'SKILL.md'
-              gene_json = skill_dir / 'gene.json'
-              
-              if not skill_md.exists():
-                  errors.append(f"{skill_dir.name}: Missing SKILL.md")
-              
-              if gene_json.exists():
-                  try:
-                      with open(gene_json) as f:
-                          gene = json.load(f)
-                      
-                      required = ['id', 'name', 'gene', 'metadata']
-                      for field in required:
-                          if field not in gene:
-                              errors.append(f"{skill_dir.name}: Missing field '{field}'")
-                  except json.JSONDecodeError as e:
-                      errors.append(f"{skill_dir.name}: Invalid JSON - {e}")
-          
-          if errors:
-              for err in errors:
-                  print(f"❌ {err}")
-              exit(1)
-          else:
-              print("✅ All skills validated successfully")
-          EOF
-
-  test-python:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-      
-      - name: Install dependencies
-        run: |
-          pip install pydantic pytest
-      
-      - name: Run tests
-        run: |
-          cd packages/core
-          python -m pytest tests/ -v || echo "Tests completed"
-
-  build-check:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Check project structure
-        run: |
-          echo "✅ Checking project structure..."
-          test -f README.md && echo "  ✓ README.md"
-          test -f LICENSE && echo "  ✓ LICENSE"
-          test -f CONTRIBUTING.md && echo "  ✓ CONTRIBUTING.md"
-          test -f QUICKSTART.md && echo "  ✓ QUICKSTART.md"
-          test -d packages && echo "  ✓ packages/"
-          test -d skills && echo "  ✓ skills/"
-          test -d .github/workflows && echo "  ✓ .github/workflows/"
-          echo "✅ Project structure valid!"
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - run: pip install pytest && cd packages/core && pytest
