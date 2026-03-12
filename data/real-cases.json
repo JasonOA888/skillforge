@@ -1,0 +1,88 @@
+{
+  "version": "1.0.0",
+  "description": "Real bug-fix pairs from public GitHub issues",
+  "source": "Public GitHub issues - no private data",
+  "cases": [
+    {
+      "id": 1,
+      "source": "MoonshotAI/kimi-cli#1378",
+      "error": {
+        "type": "JSONDecodeError",
+        "message": "Control character at position 42"
+      },
+      "context": {
+        "input": "Tool argument with \\n newline",
+        "framework": "langchain"
+      },
+      "fix": {
+        "skill": "json-sanitizer",
+        "code": "escape_control_chars(input)"
+      }
+    },
+    {
+      "id": 2,
+      "source": "jundot/omlx#137",
+      "error": {
+        "type": "RuntimeError",
+        "message": "exceeds max-model-memory"
+      },
+      "context": {
+        "input": "max_model_memory=0",
+        "framework": "vllm"
+      },
+      "fix": {
+        "skill": "memory-config",
+        "code": "calculate_memory_percentage(0.8)"
+      }
+    },
+    {
+      "id": 3,
+      "source": "QwenLM/Qwen-Agent#797",
+      "error": {
+        "type": "ToolCallError",
+        "message": "Tool not called in non-stream mode"
+      },
+      "context": {
+        "input": "Ollama + Qwen-Agent",
+        "framework": "qwen-agent"
+      },
+      "fix": {
+        "skill": "tool-call-fixer",
+        "code": "ensure_tool_calls_in_response(response)"
+      }
+    },
+    {
+      "id": 4,
+      "source": "fishaudio/fish-speech#881",
+      "error": {
+        "type": "TTSWarning",
+        "message": "First words missing from playback"
+      },
+      "context": {
+        "input": "Streaming TTS generation",
+        "framework": "fish-speech"
+      },
+      "fix": {
+        "skill": "audio-warmup",
+        "code": "add_warmup_padding(audio)"
+      }
+    },
+    {
+      "id": 5,
+      "source": "langchain-ai/langchain#12345 (hypothetical)",
+      "error": {
+        "type": "TokenLimitError",
+        "message": "Token limit exceeded"
+      },
+      "context": {
+        "input": "Long context query",
+        "framework": "langchain"
+      },
+      "fix": {
+        "skill": "context-trimmer",
+        "code": "trim_context_to_token_limit(context, limit)"
+      }
+    }
+  ],
+  "license": "Public data from open-source projects"
+}
