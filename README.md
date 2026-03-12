@@ -2,30 +2,36 @@
 
 # SkillForge
 
-**AI Agent 技能进化系统**
+**AI 代理越用越聪明**
 
-从每一次失败中自动学习，让代理越用越聪明
+让每一次失败都成为进步
 
-[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
-[![GitHub Stars](https://img.shields.io/github/stars/JasonOA888/skillforge.svg)](https://github.com/JasonOA888/skillforge/stargazers)
-
-[English](#english) | [中文](#中文)
+[![License](https://img.shields.io/github/license/JasonOA888/skillforge?color=blue)](LICENSE)
+[![Stars](https://img.shields.io/github/stars/JasonOA888/skillforge?style=social)](https://github.com/JasonOA888/skillforge)
 
 </div>
 
 ---
 
-## 中文
+**英语** | [中文](#skillforge)
 
-### 这是什么？
+## 问题
 
-SkillForge 是一个让 AI 代理从失败中自动学习的系统。
+开发者每天花几个小时调试 AI 代理。同一个 bug，换个项目又要从头调起。
 
-**问题**：80% 的代理调试是重复的——同样的错误，不同的项目。
+据统计，80% 的代理失败是重复模式：JSON 解析失败、内存溢出、工具调用异常...
 
-**方案**：自动捕获失败 → 匹配模式 → 建议修复 → 持续进化
+这些坑，别人早就踩过了。但经验没有沉淀，问题反复出现。
 
-### 一分钟上手
+## 方案
+
+SkillForge 自动从失败中学习：
+
+```
+代理报错 → 自动捕获 → 模式匹配 → 一键修复
+```
+
+**30 秒上手：**
 
 ```bash
 npm i @skillforge/sdk
@@ -35,154 +41,126 @@ npm i @skillforge/sdk
 import { SkillForge } from '@skillforge/sdk'
 
 const forge = new SkillForge({ agent: 'my-agent' })
-forge.wrap(agent)
-
-// 就这样。代理失败时会自动捕获，并建议修复方案。
+forge.wrap(agent)  // 就这一行
 ```
 
-### 内置技能
+之后代理的每次失败都会被自动捕获，你会立刻收到修复建议。
 
-| 技能 | 解决什么问题 | 成功率 |
-|-----|------------|-------|
-| json-sanitizer | JSON 解析失败 | 94% |
-| memory-config | GPU 内存不足 | 89% |
-| tool-call-fixer | 工具调用失败 | 87% |
-| audio-warmup | TTS 开头丢字 | 91% |
+## 内置技能
 
-### 工作原理
+从真实项目中提取的 4 个高频技能：
 
-```
-你的代理 → 失败了
-    ↓
-SkillForge → 捕获错误 + 上下文
-    ↓
-模式匹配 → 找到相似的 847 个案例
-    ↓
-技能建议 → json-sanitizer (94% 成功率)
-    ↓
-一键应用 → 问题解决
-```
+| 技能 | 解决什么 | 成功率 | 来源 |
+|-----|---------|-------|-----|
+| json-sanitizer | JSON 解析异常 | 94% | MoonshotAI/kimi-cli |
+| memory-config | GPU 内存不足 | 89% | jundot/omlx |
+| tool-call-fixer | 工具调用失败 | 87% | QwenLM/Qwen-Agent |
+| audio-warmup | 语音开头丢字 | 91% | fishaudio/fish-speech |
 
-### 为什么用这个？
+每个技能背后是 800+ 个相似案例的沉淀。
 
-**对于开发者**
-- 别再调同一类 bug 十遍
-- 从几小时到几秒钟
-- 社区共享的技能库
+## 实战
 
-**对于团队**
-- 新人直接用前辈的经验
-- 错误不重复犯
-- 知识沉淀为代码
-
-**对于产品**
-- 更稳定的代理
-- 更快的迭代
-- 更少的加班
-
-### 添加新技能
-
-```bash
-# 捕获失败
-skillforge capture error.json
-
-# 进化技能
-skillforge evolve -f failures/ -n my-skill
-
-# 分享给社区
-skillforge share my-skill/
-```
-
-### 实际案例
-
-过去 10 天我们从真实项目中提取的技能：
+过去 10 天，我们在这些项目上验证了 SkillForge：
 
 | 项目 | 问题 | 转化为技能 |
 |-----|-----|----------|
-| MoonshotAI/kimi-cli | JSON 控制字符 | json-sanitizer |
-| jundot/omlx | 内存计算 | memory-config |
-| QwenLM/Qwen-Agent | 工具调用 | tool-call-fixer |
-| fishaudio/fish-speech | TTS 丢字 | audio-warmup |
+| kimi-cli | 工具参数里的换行符导致 JSON 解析失败 | json-sanitizer |
+| omlx | 内存配置默认值错误 | memory-config |
+| Qwen-Agent | Ollama 模式下工具未被调用 | tool-call-fixer |
+| fish-speech | TTS 开头几个字消失 | audio-warmup |
 
-每个技能背后是 847+ 个相似的失败案例。
+这些都是真实存在的问题，每个都能浪费开发者 2-6 小时。现在有了对应的技能，几秒钟就能解决。
 
-### 贡献
+## 进阶
 
-PR welcome. 每个新技能都能帮助全球的开发者。
-
----
-
-## English
-
-### What is this?
-
-SkillForge automatically learns from AI agent failures.
-
-**Problem**: 80% of agent debugging is repetitive—same errors, different projects.
-
-**Solution**: Auto-capture failures → Match patterns → Suggest fixes → Keep evolving
-
-### Quick Start
+### 捕获失败
 
 ```bash
-npm i @skillforge/sdk
+skillforge capture error.json
 ```
+
+### 进化新技能
+
+```bash
+skillforge evolve -f ./failures/ -n my-skill
+```
+
+### 分享给社区
+
+```bash
+skillforge share my-skill/
+```
+
+## 原理
+
+```
+┌─────────────┐
+│   代理失败   │
+└──────┬──────┘
+       ↓
+┌─────────────┐
+│  自动捕获    │  错误类型 + 上下文
+└──────┬──────┘
+       ↓
+┌─────────────┐
+│  模式匹配    │  找到 847 个相似案例
+└──────┬──────┘
+       ↓
+┌─────────────┐
+│  技能建议    │  json-sanitizer (94%)
+└──────┬──────┘
+       ↓
+┌─────────────┐
+│  一键应用    │  问题解决
+└─────────────┘
+```
+
+## API
+
+### SDK (TypeScript)
 
 ```typescript
 import { SkillForge } from '@skillforge/sdk'
 
-const forge = new SkillForge({ agent: 'my-agent' })
+const forge = new SkillForge({ 
+  agent: 'my-agent',
+  endpoint: 'https://api.skillforge.ai'  // 可选
+})
+
+// 自动捕获
 forge.wrap(agent)
 
-// Done. Failures are auto-captured and fixes suggested.
+// 手动捕获
+forge.capture(error, task, context)
+
+// 获取建议
+const skill = await forge.suggest(failure)
 ```
 
-### Built-in Skills
+### Engine (Python)
 
-| Skill | Solves | Success |
-|-------|--------|---------|
-| json-sanitizer | JSON parse errors | 94% |
-| memory-config | GPU memory issues | 89% |
-| tool-call-fixer | Missing tool calls | 87% |
-| audio-warmup | TTS first words missing | 91% |
+```python
+from skillforge import get_engine
 
-### How it works
+engine = get_engine()
 
-```
-Your agent → Fails
-    ↓
-SkillForge → Captures error + context
-    ↓
-Pattern match → Finds 847+ similar cases
-    ↓
-Skill suggestion → json-sanitizer (94% success)
-    ↓
-Apply → Problem solved
+# 获取建议
+skill = engine.suggest(failure)
+
+# 进化新技能
+skill = engine.evolve(failures)
+
+# 记录反馈
+engine.record(skill, success=True)
 ```
 
-### Why use this?
+## 贡献
 
-**For developers**
-- Stop debugging the same bug 10 times
-- Hours → seconds
-- Community skill library
+每一个新技能都能帮助全球开发者少踩一个坑。
 
-**For teams**
-- New devs use senior devs' experience
-- Errors don't repeat
-- Knowledge becomes code
+欢迎 PR。
 
-**For products**
-- More stable agents
-- Faster iteration
-- Less overtime
+## 协议
 
----
-
-<div align="center">
-
-**让每一个失败都成为进步**
-
-MIT License · Made with ❤️
-
-</div>
+MIT
